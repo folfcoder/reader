@@ -19,7 +19,7 @@ export type newsData = {
   }
 
 export function newsTemplate(data: newsData): string {
-  let html = `
+  const html = `
         <!DOCTYPE html>
         <html lang="${data.lang}">
         <head>
@@ -40,7 +40,7 @@ export function newsTemplate(data: newsData): string {
           ${sanitizeHtml(data.content, {
             allowedTags: sanitizeHtml.defaults.allowedTags
               .concat(["img"])
-              .filter((item: any) => item !== "a"),
+              .filter((item: unknown) => item !== "a"),
           })}
           <a href="/"><< Return</a>
           <footer>

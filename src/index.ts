@@ -6,13 +6,13 @@ License: MIT
 */
 
 import { newsTemplate } from "./template";
-import { stripKompas } from "./website/kompas";
-import { stripTribun } from "./website/tribun";
+import { parseKompas, parseTribun } from "./website/parser";
 
 export default {
   async fetch(request: Request) {
     try {
-      let { pathname, searchParams, hostname } = new URL(request.url);
+      let { pathname } = new URL(request.url);
+      const { searchParams, hostname } = new URL(request.url);
 
       // favicon.ico
       if (pathname.startsWith("/favicon.ico")) {
@@ -31,23 +31,23 @@ export default {
           302
         );
       } else if (pathname == "/") {
-        let rss = await fetch(
+        const rss = await fetch(
           "https://news.google.com/rss/search?q=site%3Akompas.com%20OR%20site%3Atribunnews.com%20when%3A45d&hl=en-ID&gl=ID&ceid=ID%3Aen"
         );
-        let items = (await rss.text()).match(/<item>[\S\s]*?<\/item>/g);
-        let news = [];
+        const items = (await rss.text()).match(/<item>[\S\s]*?<\/item>/g);
+        const news = [];
         if (items) {
           items.sort(() => Math.random() - 0.5);
           for (let i = 0; i < Math.min(10, items.length); i++) {
-            let item = items?.[i];
-            let title = item.match(/<title>([\S\s]*?)<\/title>/)?.[1];
-            let link = item.match(/<link>([\S\s]*?)<\/link>/)?.[1];
-            let pubDate = item.match(/<pubDate>([\S\s]*?)<\/pubDate>/)?.[1];
+            const item = items?.[i];
+            const title = item.match(/<title>([\S\s]*?)<\/title>/)?.[1];
+            const link = item.match(/<link>([\S\s]*?)<\/link>/)?.[1];
+            const pubDate = item.match(/<pubDate>([\S\s]*?)<\/pubDate>/)?.[1];
             news.push({ title, link, pubDate });
           }
         }
 
-        let html = `
+        const html = `
         <!DOCTYPE html>
         <html lang="en">
           <head>
@@ -72,7 +72,7 @@ export default {
             ${news
               .map(
                 (item) =>
-                  `<li><a href="https://reader.fcd.im/${item.link}">${
+                  `<li><a href="/${item.link}">${
                     item.title
                   }</a> <small>${new Date(
                     item.pubDate || new Date().toISOString()
@@ -104,28 +104,29 @@ export default {
       }
 
       if (pathname.startsWith("news.google.com")) {
-        let linkResponse = await fetch("https://" + pathname);
-        let data = await linkResponse.text();
-        let loc = data.split('data-n-au="')[1].split('"')[0];
+        const linkResponse = await fetch("https://" + pathname);
+        const data = await linkResponse.text();
+        const loc = data.split('data-n-au="')[1].split('"')[0];
         return Response.redirect("https://" + hostname + "/" + loc, 302);
       }
 
       let news;
 
       if (pathname.includes("kompas.com")) {
-        news = await stripKompas(pathname);
+        news = await parseKompas(pathname);
       } else if (pathname.includes("tribunnews.com")) {
-        news = await stripTribun(pathname);
+        news = await parseTribun(pathname);
       } else {
-        return Response.redirect('https://reader.fcd.im/', 302);
+        return Response.redirect("https://reader.fcd.im/", 302);
       }
 
       // Image optimization w/ Cloudinary
-      let cloudinaryUrl = "https://res.cloudinary.com/dljzpse4l/image/fetch/f_auto/"
-      news.content = news.content.replaceAll('src=\"', 'src=\"' + cloudinaryUrl)
-      news.imageSrc = cloudinaryUrl + news.imageSrc
-      
-      let html = newsTemplate(news)
+      const cloudinaryUrl =
+        "https://res.cloudinary.com/dljzpse4l/image/fetch/f_auto/";
+      news.content = news.content.replaceAll('src="', 'src="' + cloudinaryUrl);
+      news.imageSrc = cloudinaryUrl + news.imageSrc;
+
+      const html = newsTemplate(news);
 
       return new Response(html, {
         status: 200,
@@ -134,8 +135,13 @@ export default {
           "X-Frame-Options": "DENY",
         },
       });
-    } catch (e: any) {
-      return new Response(e);
+    } catch (e: unknown) {
+      return new Response(e instanceof Error ? e.message : "Unknown error", {
+        status: 500,
+        headers: {
+          "Content-Type": "text/plain;charset=UTF-8",
+        },
+      });
     }
   },
 };

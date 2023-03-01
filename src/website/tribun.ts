@@ -7,34 +7,34 @@ License: MIT
 
 import { newsData } from "../template";
 
-export async function stripTribun(path: string): Promise<newsData> {
+export async function parseTribun(path: string): Promise<newsData> {
     path = path.replace("m.tribunnews.com", "www.tribunnews.com");
-    let source = await fetch("https://" + path + "?page=all");
-    let text = await source.text();
+    const source = await fetch("https://" + path + "?page=all");
+    const text = await source.text();
 
-    let h1Regex = /<h1[^>]*>([\s\S]*?)<\/h1>/;
-    let title = text.match(h1Regex)?.[1];
+    const h1Regex = /<h1[^>]*>([\s\S]*?)<\/h1>/;
+    const title = text.match(h1Regex)?.[1];
 
-    let descRegex =
+    const descRegex =
         /<meta[^>]*name="description"[^>]*content="([^"]*)"[^>]*>/i;
-    let description = text.match(descRegex)?.[1];
+    const description = text.match(descRegex)?.[1];
 
-    let authorRegex =
+    const authorRegex =
         /<meta[^>]*property="og:site_name"[^>]*content="([^"]*)"[^>]*>/i;
-    let author = text.match(authorRegex)?.[1];
+    const author = text.match(authorRegex)?.[1];
 
-    let pubDateRegex = /"datePublished": "([^"]*)"/i;
-    let pubDate = new Date(text.match(pubDateRegex)?.[1] || new Date().toISOString());
+    const pubDateRegex = /"datePublished": "([^"]*)"/i;
+    const pubDate = new Date(text.match(pubDateRegex)?.[1] || new Date().toISOString());
 
-    let langRegex = /html lang="([^"]*)"/i;
-    let lang = text.match(langRegex)?.[1];
+    const langRegex = /html lang="([^"]*)"/i;
+    const lang = text.match(langRegex)?.[1];
 
-    let imageRegex =
+    const imageRegex =
         /<meta[^>]*property="og:image"[^>]*content="([^"]*)"[^>]*>/i;
-    let imageSrc = text.match(imageRegex)?.[1];
-    let imageAlt = description;
+    const imageSrc = text.match(imageRegex)?.[1];
+    const imageAlt = description;
 
-    let startRegex = /<div class="[^>]*? txt-article.*?>/i;
+    const startRegex = /<div class="[^>]*? txt-article.*?>/i;
     let content = text
         .split(startRegex)[1]
         .split('<div class="side-article mb5"')[0];

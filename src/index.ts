@@ -6,7 +6,7 @@ License: MIT
 */
 
 import { newsTemplate } from "./template";
-import { parseKompas, parseTribun } from "./website/parser";
+import { parseKompas, parseTribun } from "./parser";
 
 export default {
   async fetch(request: Request) {

@@ -7,39 +7,39 @@ License: MIT
 
 import { newsData } from "../template";
 
-export async function stripKompas(path: string): Promise<newsData> {
-    let source = await fetch("https://" + path + "?page=all");
-    let text = await source.text();
+export async function parseKompas(path: string): Promise<newsData> {
+    const source = await fetch("https://" + path + "?page=all");
+    const text = await source.text();
 
-    let h1Regex = /<h1[^>]*>([\s\S]*?)<\/h1>/;
-    let title = text.match(h1Regex)?.[1];
+    const h1Regex = /<h1[^>]*>([\s\S]*?)<\/h1>/;
+    const title = text.match(h1Regex)?.[1];
 
-    let descRegex =
+    const descRegex =
         /<meta[^>]*name="description"[^>]*content="([^"]*)"[^>]*>/i;
-    let description = text.match(descRegex)?.[1];
+    const description = text.match(descRegex)?.[1];
 
-    let authorRegex =
+    const authorRegex =
         /<meta[^>]*name="author"[^>]*content="([^"]*)"[^>]*>/i;
-    let author = text.match(authorRegex)?.[1];
+    const author = text.match(authorRegex)?.[1];
 
-    let pubDateRegex =
+    const pubDateRegex =
         /<meta[^>]*property="article:published_time"[^>]*content="([^"]*)"[^>]*>/i;
-    let pubDate = new Date(text.match(pubDateRegex)?.[1] || new Date().toISOString());
+    const pubDate = new Date(text.match(pubDateRegex)?.[1] || new Date().toISOString());
 
-    let langRegex =
+    const langRegex =
         /html lang="([^"]*)"/i;
-    let lang = text.match(langRegex)?.[1];
+    const lang = text.match(langRegex)?.[1];
 
-    let imageRegex =
+    const imageRegex =
         /<div class="photo__wrap">[ \n]*<img[^>]*src="([^"]*)"[^>]*alt="([^"]*)"/i;
-    let imageSrc = text.match(imageRegex)?.[1];
-    let imageAlt = text.match(imageRegex)?.[2];
+    const imageSrc = text.match(imageRegex)?.[1];
+    const imageAlt = text.match(imageRegex)?.[2];
 
     let content = text
         .split('<div class="read__content">')[1]
         .split('<div id="EndOfArticle">')[0];
     content = content.replace('<div class="clearfix">', "");
-    let bacaJuga = [/<strong[^>]*>Baca juga:.*?<\/strong>/gi, /<p><strong[^>]*>Also read.*?<\/strong>.*?<\/p>/gi];
+    const bacaJuga = [/<strong[^>]*>Baca juga:.*?<\/strong>/gi, /<p><strong[^>]*>Also read.*?<\/strong>.*?<\/p>/gi];
     for (let i = 0; i < bacaJuga.length; i++) {
         content = content.replace(bacaJuga[i], "");
     }

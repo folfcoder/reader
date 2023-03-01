@@ -16,7 +16,7 @@ https://reader.fcd.im/www.kompas.com/...
 And more soon!
 
 ## ⚡ Lightning-fast
-Built with Cloudflare Workers, 📰⚡ Reader loads news articles faster than you ever thought possible. And the best part? 📰⚡ Reader doesn't require JavaScript, so it works on older browsers, making it even faster and lightweight. Don't believe us? Check out the [stats](https://gtmetrix.com/compare/TW4CzZtM/Xg1dDarc)!
+Built with Cloudflare Workers, 📰⚡ Reader loads news articles faster than you ever thought possible. And the best part? 📰⚡ Reader doesn't require JavaScript, so it works on older browsers, making it even faster and lightweight. Don't believe us? Check out the [stats](https://archive.is/CaTOg)!
 
 ## 🔒 Privacy-first
 📰⚡ Reader takes your privacy seriously. By proxying your requests, it masks your IP address, ISP, and location from the original news sites. So, you can browse the news with peace of mind, knowing that your personal information is protected.

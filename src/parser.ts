@@ -5,7 +5,7 @@ Description: Export all parsers
 License: MIT
 */
 
-import { parseKompas } from "./kompas";
-import { parseTribun } from "./tribun";
+import { parseKompas } from "./website/kompas";
+import { parseTribun } from "./website/tribun";
 
 export { parseKompas, parseTribun };

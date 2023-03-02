@@ -1,5 +1,5 @@
 /* 📰⚡ Reader
-File: src/website/parser.ts
+File: src/parser.ts
 Author: Kai Folf
 Description: Export all parsers
 License: MIT

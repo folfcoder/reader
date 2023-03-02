@@ -7,5 +7,6 @@ License: MIT
 
 import { parseKompas } from "./website/kompas";
 import { parseTribun } from "./website/tribun";
+import { parseKompasID } from "./website/kompas-id";
 
-export { parseKompas, parseTribun };
+export { parseKompas, parseTribun, parseKompasID };

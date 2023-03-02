@@ -47,6 +47,8 @@ export default {
           }
         }
 
+        const nonce = crypto.randomUUID();
+
         const html = `
         <!DOCTYPE html>
         <html lang="en">
@@ -57,13 +59,22 @@ export default {
             <link rel="dns-prefetch" href="https://cdn.jsdelivr.net/">
             <link rel="dns-prefetch" href="https://static.cloudflareinsights.com/" />
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
+            <style nonce='${nonce}'>
+              #url-form {
+                display: flex;
+              }
+
+              #url {
+                flex-grow: 4;
+              }
+            </style>
           </head>
           <body>
           <h1>📰⚡ Reader</h1>
           <p>Tired of slow, ad-filled news websites? Say hello to the ad-free, lightning-fast Indonesian news reader that'll make you feel like a superhero!</p>
           <form action="/">
-            <div style="display: flex;">
-              <input style="flex-grow: 4;" type="text" id="url" name="url" placeholder="kompas.com, kompas.id, tribunnews.com" autofocus>
+            <div id="url-form">
+              <input type="text" id="url" name="url" placeholder="kompas.com, kompas.id, tribunnews.com" autofocus>
               <input type="submit" value="Read">
             </div>
           </form> 
@@ -93,6 +104,9 @@ export default {
           headers: {
             "Content-Type": "text/html;charset=UTF-8",
             "X-Frame-Options": "DENY",
+            "X-XSS-Protection": "1; mode=block",
+            "Content-Security-Policy":
+              `default-src 'self'; object-src 'none'; script-src 'self' static.cloudflareinsights.com; connect-src cloudflareinsights.com; style-src 'self' 'nonce-${nonce}' https://cdn.jsdelivr.net; img-src 'self' res.cloudinary.com;`,
           },
         });
       }
@@ -135,6 +149,9 @@ export default {
         headers: {
           "Content-Type": "text/html;charset=UTF-8",
           "X-Frame-Options": "DENY",
+          "X-XSS-Protection": "1; mode=block",
+          "Content-Security-Policy":
+              `default-src 'self'; object-src 'none'; script-src 'self' static.cloudflareinsights.com; connect-src cloudflareinsights.com; style-src 'self' https://cdn.jsdelivr.net; img-src 'self' res.cloudinary.com;`,
         },
       });
     } catch (e: unknown) {
@@ -142,6 +159,10 @@ export default {
         status: 500,
         headers: {
           "Content-Type": "text/plain;charset=UTF-8",
+          "X-Frame-Options": "DENY",
+          "X-XSS-Protection": "1; mode=block",
+          "Content-Security-Policy":
+              `default-src 'self'; object-src 'none'; script-src 'self' static.cloudflareinsights.com; connect-src cloudflareinsights.com; style-src 'self' https://cdn.jsdelivr.net; img-src 'self' res.cloudinary.com;`,
         },
       });
     }

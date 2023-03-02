@@ -6,7 +6,7 @@ License: MIT
 */
 
 import { newsTemplate } from "./template";
-import { parseKompas, parseTribun } from "./parser";
+import { parseKompas, parseTribun, parseKompasID } from "./parser";
 
 export default {
   async fetch(request: Request) {
@@ -60,10 +60,10 @@ export default {
           </head>
           <body>
           <h1>📰⚡ Reader</h1>
-          <p>Read kompas.com and tribunnews.com articles without ads and distractions!</p>
+          <p>Tired of slow, ad-filled news websites? Say hello to the ad-free, lightning-fast Indonesian news reader that'll make you feel like a superhero!</p>
           <form action="/">
             <div style="display: flex;">
-              <input style="flex-grow: 4;" type="text" id="url" name="url" placeholder="kompas.com, tribunnews.com" autofocus>
+              <input style="flex-grow: 4;" type="text" id="url" name="url" placeholder="kompas.com, kompas.id, tribunnews.com" autofocus>
               <input type="submit" value="Read">
             </div>
           </form> 
@@ -114,6 +114,8 @@ export default {
 
       if (pathname.includes("kompas.com")) {
         news = await parseKompas(pathname);
+      } else if (pathname.includes("kompas.id")) {
+        news = await parseKompasID(pathname);
       } else if (pathname.includes("tribunnews.com")) {
         news = await parseTribun(pathname);
       } else {

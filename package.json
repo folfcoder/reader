@@ -15,7 +15,7 @@
     "deploy": "wrangler publish"
   },
   "dependencies": {
-    "@types/sanitize-html": "^2.8.0",
-    "sanitize-html": "^2.8.1"
+    "@types/sanitize-html": "^2.8.1",
+    "sanitize-html": "^2.10.0"
   }
 }

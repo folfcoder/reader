@@ -15,7 +15,9 @@
     "deploy": "wrangler publish"
   },
   "dependencies": {
+    "@cfworker/sentry": "^1.12.4",
     "@types/sanitize-html": "^2.8.1",
+    "hono": "^3.0.3",
     "sanitize-html": "^2.10.0"
   }
 }

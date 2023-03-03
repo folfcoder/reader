@@ -7,8 +7,8 @@ License: MIT
 
 import { newsData } from "../template";
 
-export async function parseKompas(path: string): Promise<newsData> {
-    const source = await fetch("https://" + path + "?page=all");
+export async function parseKompas(url: string): Promise<newsData> {
+    const source = await fetch(url + "?page=all");
     const text = await source.text();
 
     const h1Regex = /<h1[^>]*>([\s\S]*?)<\/h1>/;

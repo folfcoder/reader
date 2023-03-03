@@ -18,10 +18,7 @@ export type newsData = {
   content: string;
 };
 
-export function indexTemplate(news: []): { html: string; nonce: string } {
-  // Nonce for CSP
-  const nonce = crypto.randomUUID();
-
+export function indexTemplate(news: []): string {
   const html = `
   <!DOCTYPE html>
   <html lang="en">
@@ -32,15 +29,7 @@ export function indexTemplate(news: []): { html: string; nonce: string } {
       <link rel="dns-prefetch" href="https://cdn.jsdelivr.net/">
       <link rel="dns-prefetch" href="https://static.cloudflareinsights.com/" />
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
-      <style nonce='${nonce}'>
-        #url-form {
-          display: flex;
-        }
-
-        #url {
-          flex-grow: 4;
-        }
-      </style>
+      <link rel="stylesheet" href="/static/styles.css">
     </head>
     <body>
     <h1>📰⚡ Reader</h1>
@@ -75,7 +64,7 @@ export function indexTemplate(news: []): { html: string; nonce: string } {
     </body>
   </html>
   `;
-  return {html, nonce};
+  return html;
 }
 
 export function newsTemplate(data: newsData): string {
@@ -113,5 +102,36 @@ export function newsTemplate(data: newsData): string {
         </body>
         </html>
       `;
+  return html;
+}
+
+export function errorTemplate(error: string): string {
+  const html = `
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <title>📰⚡ Reader by Kai</title>
+    <meta name="description" content="Read kompas.com (and other sites) news without ads and distractions!">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net/">
+    <link rel="dns-prefetch" href="https://static.cloudflareinsights.com/" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
+  </head>
+  <body>
+    <h1>📰⚡ Reader: Server Error</h1>
+    <span>${new Date().toString()}</span>
+    <hr>
+    <p><code>${error}</code></p>
+    <p>Uh oh! It looks like our code wizards accidentally let a pesky gremlin sneak into the system. Not to worry, we've apprehended the little troublemaker and are putting it in a time-out. Please take a moment to enjoy this adorable kitten pics while we straighten things out.</p>
+    <img src="https://placekitten.com/720/480" alt="Enjoy this picture of a kitten!" width="100%" />
+    <p><a href="/"><< Return</a></p>
+    <footer>
+      📰⚡ Reader by <a href="https://fcd.im" target="_blank">Kai</a> | 
+      <a href="https://gist.github.com/folfcoder/c80ebb177db1e83dd12e24432a9b58b6/raw/reader.user.js" target="_blank">Userscript</a> |
+      Built with Cloudflare Workers
+    </footer>
+  </body>
+  </html>
+  `;
   return html;
 }

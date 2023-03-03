@@ -1,4 +1,4 @@
-interface Env {
+type Env = {
 	READER_KV: KVNamespace;
 	CLOUDINARY_URL: string;
 	SENTRY_URL: string;

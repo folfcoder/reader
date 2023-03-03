@@ -9,8 +9,8 @@ kv_namespaces = [
 [triggers]
 crons = ["0 */6 * * *"]
 
-[vars]
-WORKERS_ENV = "dev"
+[site]
+bucket = "./assets"
 
-[env.production.vars]
+[vars]
 WORKERS_ENV = "prod"

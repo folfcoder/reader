@@ -2,12 +2,30 @@
 # yarn lockfile v1
 
 
+"@cfworker/sentry@^1.12.4":
+  version "1.12.4"
+  resolved "https://registry.yarnpkg.com/@cfworker/sentry/-/sentry-1.12.4.tgz#21b383133693cbe9185aae2cbfb5aa47f292fcd3"
+  integrity sha512-20brfZduUBcyZDJHv4gpv+v+ktELxOiuUPkqkQQQEoqRCxkUqsyLV9vIjNfy0MQtN7fqmd4pbN0F8AyC6ju5EQ==
+  dependencies:
+    "@cfworker/worker-types" "^1.12.3"
+    "@cloudflare/workers-types" "^2.2.2"
+
+"@cfworker/worker-types@^1.12.3":
+  version "1.12.3"
+  resolved "https://registry.yarnpkg.com/@cfworker/worker-types/-/worker-types-1.12.3.tgz#869cc62f815fd81454f73440e4e09aad28874d06"
+  integrity sha512-p9wWxB1n+D0Mm9YFYcU80Ea9rUqYDAkuYvSPjKezCSjFKGDm12x9S/8md33h7a4IAzxtO9pfOVoVLvVI2hpR9g==
+
 "@cloudflare/kv-asset-handler@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@cloudflare/kv-asset-handler/-/kv-asset-handler-0.2.0.tgz#c9959bbd7a1c40bd7c674adae98aa8c8d0e5ca68"
   integrity sha512-MVbXLbTcAotOPUj0pAMhVtJ+3/kFkwJqc5qNOleOZTv6QkZZABDMS21dSrSlVswEHwrpWC03e4fWytjqKvuE2A==
   dependencies:
     mime "^3.0.0"
+
+"@cloudflare/workers-types@^2.2.2":
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@cloudflare/workers-types/-/workers-types-2.2.2.tgz#1bced16bba801d7af987da835467545bb5cc7ac6"
+  integrity sha512-kaMn2rueJ0PL1TYVGknTCh0X0x0d9G+FNXAFep7/4uqecEZoQb/63o6rOmMuiqI09zLuHV6xhKRXinokV/MY9A==
 
 "@cloudflare/workers-types@^4.20230228.0":
   version "4.20230228.0"
@@ -1026,6 +1044,11 @@ has-flag@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-4.0.0.tgz#944771fd9c81c81265c4d6941860da06bb59479b"
   integrity sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==
+
+hono@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/hono/-/hono-3.0.3.tgz#26b62bece753941dd3d290d03ff3338f71535017"
+  integrity sha512-6Lb/TPH7Me1GAjFR7k/duzTcHS5y+rxFyL6Ky0kYQQlu92l99t53CFMVcdNUpHeStarPOs4Uzl413zIvxaI15A==
 
 html-rewriter-wasm@^0.4.1:
   version "0.4.1"

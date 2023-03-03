@@ -1,0 +1,7 @@
+#url-form {
+  display: flex;
+}
+
+#url {
+  flex-grow: 4;
+}

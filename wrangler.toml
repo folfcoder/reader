@@ -2,7 +2,15 @@ name = "reader"
 main = "src/index.ts"
 compatibility_date = "2023-01-20"
 usage_model = "bundled"
-env = { }
+kv_namespaces = [
+    { binding = "READER_KV", id = "9d591a1d972149698e2460cafbb6feb4", preview_id = "9d591a1d972149698e2460cafbb6feb4"}
+]
 
 [triggers]
-crons = [ ]
+crons = ["0 */6 * * *"]
+
+[vars]
+WORKERS_ENV = "dev"
+
+[env.production.vars]
+WORKERS_ENV = "prod"

@@ -1,4 +1,4 @@
-# 📰⚡ Reader
+# 📰⚡ Reader · ![](https://img.shields.io/github/license/folfcoder/reader) ![](https://github.com/folfcoder/reader/actions/workflows/eslint.yml/badge.svg)
 Tired of slow, ad-filled news websites? Say hello to 📰⚡ Reader - the Indonesian news reader that will make you feel like a superhero! With lightning-fast speeds and ad-free browsing, you can quickly catch up on the latest news without any distractions.
 
 ## 🔧 Usage

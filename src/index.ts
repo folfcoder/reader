@@ -5,11 +5,16 @@ Description: Main file
 License: MIT
 */
 
-import { newsTemplate } from "./template";
-import { parseKompas, parseTribun, parseKompasID } from "./parser";
+import { indexTemplate, newsTemplate } from "./template";
+import { parseNews } from "./parser";
+import { updateNews } from "./cron";
+import { captureError } from "@cfworker/sentry";
 
 export default {
-  async fetch(request: Request) {
+  async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
+    ctx.waitUntil(updateNews(env));
+  },
+  async fetch(request: Request, env: Env) {
     try {
       let { pathname } = new URL(request.url);
       const { searchParams, hostname } = new URL(request.url);
@@ -24,6 +29,45 @@ export default {
         return new Response("User-Agent: *\nAllow: /");
       }
 
+      // News API
+      if (pathname.startsWith("/api/news")) {
+        try {
+          // Get news from KV
+          const news = JSON.parse(
+            (await env.READER_KV.get("news", { cacheTtl: 3600 })) || "[]"
+          );
+
+          // Prefix news with 📰⚡ Reader's hostname + Cloudinary CDN
+          for (let i = 0; i < news.length; i++) {
+            news[i].link = "https://" + hostname + "/" + news[i].link;
+            news[i].image = env.CLOUDINARY_URL + news[i].image;
+          }
+
+          // Return news
+          return new Response(JSON.stringify({ success: true, news: news }), {
+            status: 200,
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+            },
+          });
+        } catch (e: unknown) {
+          return new Response(
+            JSON.stringify({
+              success: false,
+              error: e instanceof Error ? e.message : "Unknown error",
+            }),
+            {
+              status: 500,
+              headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+              },
+            }
+          );
+        }
+      }
+
       // Page index
       if (pathname == "/" && searchParams.get("url")) {
         return Response.redirect(
@@ -31,116 +75,39 @@ export default {
           302
         );
       } else if (pathname == "/") {
-        const rss = await fetch(
-          "https://news.google.com/rss/search?q=site%3Akompas.com%20OR%20site%3Atribunnews.com%20when%3A45d&hl=en-ID&gl=ID&ceid=ID%3Aen"
+        // Get news from KV
+        const news = JSON.parse(
+          (await env.READER_KV.get("news", { cacheTtl: 3600 })) || "[]"
         );
-        const items = (await rss.text()).match(/<item>[\S\s]*?<\/item>/g);
-        const news = [];
-        if (items) {
-          items.sort(() => Math.random() - 0.5);
-          for (let i = 0; i < Math.min(10, items.length); i++) {
-            const item = items?.[i];
-            const title = item.match(/<title>([\S\s]*?)<\/title>/)?.[1];
-            const link = item.match(/<link>([\S\s]*?)<\/link>/)?.[1];
-            const pubDate = item.match(/<pubDate>([\S\s]*?)<\/pubDate>/)?.[1];
-            news.push({ title, link, pubDate });
-          }
-        }
 
-        const nonce = crypto.randomUUID();
-
-        const html = `
-        <!DOCTYPE html>
-        <html lang="en">
-          <head>
-            <title>📰⚡ Reader by Kai</title>
-            <meta name="description" content="Read kompas.com (and other sites) news without ads and distractions!">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <link rel="dns-prefetch" href="https://cdn.jsdelivr.net/">
-            <link rel="dns-prefetch" href="https://static.cloudflareinsights.com/" />
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
-            <style nonce='${nonce}'>
-              #url-form {
-                display: flex;
-              }
-
-              #url {
-                flex-grow: 4;
-              }
-            </style>
-          </head>
-          <body>
-          <h1>📰⚡ Reader</h1>
-          <p>Tired of slow, ad-filled news websites? Say hello to the ad-free, lightning-fast Indonesian news reader that'll make you feel like a superhero!</p>
-          <form action="/">
-            <div id="url-form">
-              <input type="text" id="url" name="url" placeholder="kompas.com, kompas.id, tribunnews.com" autofocus>
-              <input type="submit" value="Read">
-            </div>
-          </form> 
-          <h2>News</h2>
-          <ul>
-            ${news
-              .map(
-                (item) =>
-                  `<li><a href="/${item.link}">${
-                    item.title
-                  }</a> <small>${new Date(
-                    item.pubDate || new Date().toISOString()
-                  ).toLocaleString()}</small></li>`
-              )
-              .join("")}
-          </ul>
-          <footer>
-            📰⚡ Reader by <a href="https://fcd.im" target="_blank">Kai</a> | 
-            <a href="https://gist.github.com/folfcoder/c80ebb177db1e83dd12e24432a9b58b6/raw/reader.user.js" target="_blank">Userscript</a> |
-            Built with Cloudflare Workers
-          </footer>
-          </body>
-        </html>
-        `;
+        const { html, nonce } = indexTemplate(news);
         return new Response(html, {
           status: 200,
           headers: {
             "Content-Type": "text/html;charset=UTF-8",
             "X-Frame-Options": "DENY",
             "X-XSS-Protection": "1; mode=block",
-            "Content-Security-Policy":
-              `default-src 'self'; object-src 'none'; script-src 'self' static.cloudflareinsights.com; connect-src cloudflareinsights.com; style-src 'self' 'nonce-${nonce}' https://cdn.jsdelivr.net; img-src 'self' res.cloudinary.com;`,
+            "Content-Security-Policy": `default-src 'self'; object-src 'none'; script-src 'self' static.cloudflareinsights.com; connect-src cloudflareinsights.com; style-src 'self' 'nonce-${nonce}' https://cdn.jsdelivr.net; img-src 'self' res.cloudinary.com;`,
           },
         });
       }
 
       if (pathname.includes("://")) {
         pathname = pathname.split("://")[1];
+      } else if (pathname.includes(":/")) {
+        pathname = pathname.split(":/")[1];
       } else if (pathname.startsWith("/")) {
         pathname = pathname.substring(1);
       }
 
-      if (pathname.startsWith("news.google.com")) {
-        const linkResponse = await fetch("https://" + pathname);
-        const data = await linkResponse.text();
-        const loc = data.split('data-n-au="')[1].split('"')[0];
-        return Response.redirect("https://" + hostname + "/" + loc, 302);
-      }
-
-      let news;
-
-      if (pathname.includes("kompas.com")) {
-        news = await parseKompas(pathname);
-      } else if (pathname.includes("kompas.id")) {
-        news = await parseKompasID(pathname);
-      } else if (pathname.includes("tribunnews.com")) {
-        news = await parseTribun(pathname);
-      } else {
-        return Response.redirect("https://reader.fcd.im/", 302);
-      }
+      const news = await parseNews("https://" + pathname);
 
       // Image optimization w/ Cloudinary
-      const cloudinaryUrl =
-        "https://res.cloudinary.com/dljzpse4l/image/fetch/f_auto/";
-      news.content = news.content.replaceAll('src="', 'src="' + cloudinaryUrl);
-      news.imageSrc = cloudinaryUrl + news.imageSrc;
+      news.content = news.content.replaceAll(
+        'src="',
+        'src="' + env.CLOUDINARY_URL
+      );
+      news.imageSrc = env.CLOUDINARY_URL + news.imageSrc;
 
       const html = newsTemplate(news);
 
@@ -150,19 +117,30 @@ export default {
           "Content-Type": "text/html;charset=UTF-8",
           "X-Frame-Options": "DENY",
           "X-XSS-Protection": "1; mode=block",
-          "Content-Security-Policy":
-              `default-src 'self'; object-src 'none'; script-src 'self' static.cloudflareinsights.com; connect-src cloudflareinsights.com; style-src 'self' https://cdn.jsdelivr.net; img-src 'self' res.cloudinary.com;`,
+          "Content-Security-Policy": `default-src 'self'; object-src 'none'; script-src 'self' static.cloudflareinsights.com; connect-src cloudflareinsights.com; style-src 'self' https://cdn.jsdelivr.net; img-src 'self' res.cloudinary.com;`,
         },
       });
     } catch (e: unknown) {
+      // Log error to Sentry
+      if (env.SENTRY_URL) {
+        captureError(
+          env.SENTRY_URL,
+          env.WORKERS_ENV,
+          "reader@latest",
+          e,
+          request,
+          {}
+        );
+      }
+
+      // Return error
       return new Response(e instanceof Error ? e.message : "Unknown error", {
         status: 500,
         headers: {
           "Content-Type": "text/plain;charset=UTF-8",
           "X-Frame-Options": "DENY",
           "X-XSS-Protection": "1; mode=block",
-          "Content-Security-Policy":
-              `default-src 'self'; object-src 'none'; script-src 'self' static.cloudflareinsights.com; connect-src cloudflareinsights.com; style-src 'self' https://cdn.jsdelivr.net; img-src 'self' res.cloudinary.com;`,
+          "Content-Security-Policy": `default-src 'self'; object-src 'none'; script-src 'self' static.cloudflareinsights.com; connect-src cloudflareinsights.com; style-src 'self' https://cdn.jsdelivr.net; img-src 'self' res.cloudinary.com;`,
         },
       });
     }

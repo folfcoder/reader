@@ -19,11 +19,11 @@ const app = new Hono<{ Bindings: Env }>();
 app.use("/api/*", cors());
 
 // Static files
-app.get("/static/*", serveStatic({ root: "./" }));
-app.get("/robots.txt", serveStatic({ path: "./robots.txt" }));
-app.get("/favicon.ico", serveStatic({ path: "./favicon.ico" }));
+app.all("/static/*", serveStatic({ root: "./" }));
+app.all("/robots.txt", serveStatic({ path: "./robots.txt" }));
+app.all("/favicon.ico", serveStatic({ path: "./favicon.ico" }));
 
-app.get("/", async (c) => {
+app.all("/", async (c) => {
   // Security headers
   c.header("X-Frame-Options", "DENY");
   c.header("X-XSS-Protection", "1; mode=block");
@@ -48,7 +48,7 @@ app.get("/", async (c) => {
   return c.html(indexTemplate(news));
 });
 
-app.get("/api/news", async (c) => {
+app.all("/api/news", async (c) => {
   // Get news from KV
   const news = JSON.parse(
     (await c.env.READER_KV.get("news", { cacheTtl: 3600 })) || "[]"
@@ -63,7 +63,7 @@ app.get("/api/news", async (c) => {
   return c.json({ success: true, news });
 });
 
-app.get("/*", async (c) => {
+app.all("/*", async (c) => {
   // Security headers
   c.header("X-Frame-Options", "DENY");
   c.header("X-XSS-Protection", "1; mode=block");

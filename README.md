@@ -1,4 +1,4 @@
-# 📰⚡ Reader · ![](https://img.shields.io/github/license/folfcoder/reader) ![](https://github.com/folfcoder/reader/actions/workflows/eslint.yml/badge.svg) ![](https://img.shields.io/uptimerobot/ratio/7/m793841603-bd4a5afb36dbd6a4ddcd109f)
+# 📰⚡ Reader · [![](https://img.shields.io/github/license/folfcoder/reader)](https://github.com/folfcoder/reader/blob/main/LICENSE) [![](https://github.com/folfcoder/reader/actions/workflows/eslint.yml/badge.svg)](https://github.com/folfcoder/reader/actions/workflows/eslint.yml) [![](https://img.shields.io/uptimerobot/ratio/7/m793841603-bd4a5afb36dbd6a4ddcd109f)](https://stats.uptimerobot.com/Ym4LKSDxJ4)
 Tired of slow, ad-filled news websites? Say hello to 📰⚡ Reader - the Indonesian news reader that will make you feel like a superhero! With lightning-fast speeds and ad-free browsing, you can quickly catch up on the latest news without any distractions.
 
 ## 🔧 Usage

@@ -35,8 +35,9 @@ export function indexTemplate(news: []): string {
     <h1>📰⚡ Reader</h1>
     <p>Tired of slow, ad-filled news websites? Say hello to the ad-free, lightning-fast Indonesian news reader that'll make you feel like a superhero!</p>
     <form action="/">
+      <label for="url">News URL</label>
       <div id="url-form">
-        <input type="text" id="url" name="url" placeholder="kompas.com, kompas.id, tribunnews.com" autofocus>
+        <input type="text" id="url" name="url" placeholder="Kompas, Liputan6, Tribunnews" autofocus>
         <input type="submit" value="Read">
       </div>
     </form> 

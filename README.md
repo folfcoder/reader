@@ -12,6 +12,7 @@ https://reader.fcd.im/www.kompas.com/...
 ## 📰 Supported sites
 - [X] Kompas.com
 - [X] Kompas.id
+- [X] Liputan6.com
 - [X] Tribunnews.com
 
 And more soon!

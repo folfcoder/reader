@@ -24,5 +24,12 @@ Built with Cloudflare Workers, 📰⚡ Reader loads news articles faster than yo
 
 📰⚡ Reader uses Cloudflare Analytics, a lightweight privacy-first analytics tool that doesn't track users. This analytics is used to improve 📰⚡ Reader's functionality and speed, ensuring that you have the best possible news reading experience. So, rest assured that while using 📰⚡ Reader, your privacy is always a top priority.
 
+## 🌲 Eco-friendly
+Did you know that according to Ecograder, reading news articles without 📰⚡ Reader emits more than 3g of carbon dioxide, which is equivalent to driving a car for almost 12 meters? With 📰⚡ Reader, you can reduce your carbon footprint to just 0.05g! 📰⚡ Reader is designed with sustainability in mind. It's lightweight and uses minimal resources to ensure that you can stay up-to-date with the latest news without harming the planet.
+
+In addition, 📰⚡ Reader's host, Cloudflare, is Green Web Foundation certified, so you can rest assured that you're using a service that's committed to reducing its carbon impact:
+
+![](https://api.thegreenwebfoundation.org/greencheckimage/reader.fcd.im?nocache=true)
+
 ## 📄 License
 📰⚡ Reader is released under the [MIT](https://github.com/folfcoder/reader/blob/main/LICENSE) license. So, you can use it, modify it, and distribute it!

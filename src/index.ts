@@ -29,7 +29,7 @@ app.all("/", async (c) => {
   c.header("X-XSS-Protection", "1; mode=block");
   c.header(
     "Content-Security-Policy",
-    "default-src 'self'; object-src 'none'; script-src 'self' static.cloudflareinsights.com; connect-src cloudflareinsights.com; style-src 'self' https://cdn.jsdelivr.net; img-src 'self' res.cloudinary.com placekitten.com"
+    "default-src 'self'; object-src 'none'; script-src 'self' static.cloudflareinsights.com; connect-src cloudflareinsights.com; style-src 'self' https://cdn.jsdelivr.net; img-src https: data:"
   );
 
   // Preload styles
@@ -69,7 +69,7 @@ app.all("/*", async (c) => {
   c.header("X-XSS-Protection", "1; mode=block");
   c.header(
     "Content-Security-Policy",
-    "default-src 'self'; object-src 'none'; script-src 'self' static.cloudflareinsights.com; connect-src cloudflareinsights.com; style-src 'self' https://cdn.jsdelivr.net; img-src 'self' res.cloudinary.com placekitten.com"
+    "default-src 'self'; object-src 'none'; script-src 'self' static.cloudflareinsights.com; connect-src cloudflareinsights.com; style-src 'self' https://cdn.jsdelivr.net; img-src https: data:"
   );
 
   let { pathname } = new URL(c.req.url);
@@ -86,12 +86,9 @@ app.all("/*", async (c) => {
   // Parse news
   const news = await parseNews("https://" + pathname);
 
-  // Optimize image with Cloudinary
-  news.content = news.content.replaceAll(
-    'src="',
-    'src="' + c.env.CLOUDINARY_URL
-  );
-  news.imageSrc = c.env.CLOUDINARY_URL + news.imageSrc;
+  // Optimize image with Cloudinary whenever possible
+  news.content = news.content.replace(/<img[^>]* src=["'](.{0,255}?)["']/gi, `<img src="${c.env.CLOUDINARY_URL}$1"`)
+  news.imageSrc = news.imageSrc.length <= 255 ? c.env.CLOUDINARY_URL + news.imageSrc : news.imageSrc;
 
   return c.html(newsTemplate(news));
 });

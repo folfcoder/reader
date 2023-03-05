@@ -24,6 +24,23 @@ export function indexTemplate(news: []): string {
       <title>📰⚡ Reader - The Lightning-fast Indonesian News Reader</title>
       <meta name="description" content="Read Kompas, Liputan6, Tribunnews articles without ads and distractions!">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="theme-color" content="#DDFE67">
+
+      <!-- Open Graph -->
+      <meta property="og:site_name" content="📰⚡ Reader">
+      <meta property="og:title" content="📰⚡ Reader - The Lightning-fast Indonesian News Reader">
+      <meta property="og:description" content="Read Kompas, Liputan6, Tribunnews articles without ads and distractions!">
+      <meta property="og:type" content="website">
+      <meta property="og:image" content="https://opengraph.githubassets.com/93319d7a41623d264aa57403823edc73d803e4076f9de6031273563c096d8f9b/folfcoder/reader">
+
+      <!-- Twitter -->
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:site" content="@folfcoder">
+      <meta name="twitter:title" content="📰⚡ Reader - The Lightning-fast Indonesian News Reader">
+      <meta name="twitter:description" content="Read Kompas, Liputan6, Tribunnews articles without ads and distractions!">
+      <meta name="twitter:image" content="https://opengraph.githubassets.com/93319d7a41623d264aa57403823edc73d803e4076f9de6031273563c096d8f9b/folfcoder/reader">
+      <meta name="twitter:image:alt" content="Image banner for 📰⚡ Reader.">
+
       <link rel="dns-prefetch" href="https://cdn.jsdelivr.net/">
       <link rel="dns-prefetch" href="https://static.cloudflareinsights.com/" />
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
@@ -75,6 +92,7 @@ export function newsTemplate(data: newsData): string {
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <meta name="description" content="${data.description}">
           <meta name="robots" content="noindex">
+          <meta name="theme-color" content="#DDFE67">
 
           <!-- Open Graph -->
           <meta property="og:site_name" content="📰⚡ Reader">
@@ -126,6 +144,23 @@ export function errorTemplate(error: string): string {
     <title>📰⚡ Reader - The Lightning-fast Indonesian News Reader</title>
     <meta name="description" content="Read Kompas, Liputan6, Tribunnews articles without ads and distractions!">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#DDFE67">
+
+    <!-- Open Graph -->
+    <meta property="og:site_name" content="📰⚡ Reader">
+    <meta property="og:title" content="📰⚡ Reader - The Lightning-fast Indonesian News Reader">
+    <meta property="og:description" content="Read Kompas, Liputan6, Tribunnews articles without ads and distractions!">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://opengraph.githubassets.com/93319d7a41623d264aa57403823edc73d803e4076f9de6031273563c096d8f9b/folfcoder/reader">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@folfcoder">
+    <meta name="twitter:title" content="📰⚡ Reader - The Lightning-fast Indonesian News Reader">
+    <meta name="twitter:description" content="Read Kompas, Liputan6, Tribunnews articles without ads and distractions!">
+    <meta name="twitter:image" content="https://opengraph.githubassets.com/93319d7a41623d264aa57403823edc73d803e4076f9de6031273563c096d8f9b/folfcoder/reader">
+    <meta name="twitter:image:alt" content="Image banner for 📰⚡ Reader.">
+
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net/">
     <link rel="dns-prefetch" href="https://static.cloudflareinsights.com/" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">

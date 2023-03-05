@@ -5,7 +5,7 @@ Description: Main file
 License: MIT
 */
 
-import { errorTemplate, indexTemplate, newsTemplate } from "./template";
+import { errorTemplate, indexTemplate, newsData, newsTemplate } from "./template";
 import { parseNews } from "./parser";
 import { updateNews } from "./cron";
 import { captureError } from "@cfworker/sentry";
@@ -29,7 +29,7 @@ app.all("/", async (c) => {
   c.header("X-XSS-Protection", "1; mode=block");
   c.header(
     "Content-Security-Policy",
-    "default-src 'self'; object-src 'none'; script-src 'self' static.cloudflareinsights.com; connect-src cloudflareinsights.com; style-src 'self' https://cdn.jsdelivr.net; img-src https: data:"
+    "default-src 'self'; object-src 'none'; script-src 'self' static.cloudflareinsights.com; connect-src 'self' cloudflareinsights.com; style-src 'self' https://cdn.jsdelivr.net; img-src https: data:"
   );
 
   // Preload styles
@@ -69,7 +69,7 @@ app.all("/*", async (c) => {
   c.header("X-XSS-Protection", "1; mode=block");
   c.header(
     "Content-Security-Policy",
-    "default-src 'self'; object-src 'none'; script-src 'self' static.cloudflareinsights.com; connect-src cloudflareinsights.com; style-src 'self' https://cdn.jsdelivr.net; img-src https: data:"
+    "default-src 'self'; object-src 'none'; script-src 'self' static.cloudflareinsights.com; connect-src 'self' cloudflareinsights.com; style-src 'self' https://cdn.jsdelivr.net; img-src https: data:"
   );
 
   let { pathname } = new URL(c.req.url);
@@ -83,8 +83,18 @@ app.all("/*", async (c) => {
     pathname = pathname.substring(1);
   }
 
-  // Parse news
-  const news = await parseNews("https://" + pathname);
+  // Parse news, cache it for 1 hour
+  let news: newsData;
+  const cache = await c.env.READER_KV.get(`cache:${pathname}`, { cacheTtl: 1800 });
+  if (cache && c.env.WORKERS_ENV === "prod") {
+    news = JSON.parse(cache);
+    news.pubDate = new Date(news.pubDate);
+  } else {
+    news = await parseNews("https://" + pathname);
+    await c.env.READER_KV.put(`cache:${pathname}`, JSON.stringify(news), {
+      expirationTtl: 3600,
+    });
+  }
 
   // Optimize image with Cloudinary whenever possible
   news.content = news.content.replace(/<img[^>]* src=["'](.{0,255}?)["']/gi, `<img src="${c.env.CLOUDINARY_URL}$1"`)

@@ -21,8 +21,8 @@ export function indexTemplate(news: []): string {
   <!DOCTYPE html>
   <html lang="en">
     <head>
-      <title>📰⚡ Reader by Kai</title>
-      <meta name="description" content="Read kompas.com (and other sites) news without ads and distractions!">
+      <title>📰⚡ Reader - The Lightning-fast Indonesian News Reader</title>
+      <meta name="description" content="Read Kompas, Liputan6, Tribunnews articles without ads and distractions!">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <link rel="dns-prefetch" href="https://cdn.jsdelivr.net/">
       <link rel="dns-prefetch" href="https://static.cloudflareinsights.com/" />
@@ -105,8 +105,8 @@ export function errorTemplate(error: string): string {
   <!DOCTYPE html>
   <html lang="en">
   <head>
-    <title>📰⚡ Reader by Kai</title>
-    <meta name="description" content="Read kompas.com (and other sites) news without ads and distractions!">
+    <title>📰⚡ Reader - The Lightning-fast Indonesian News Reader</title>
+    <meta name="description" content="Read Kompas, Liputan6, Tribunnews articles without ads and distractions!">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net/">
     <link rel="dns-prefetch" href="https://static.cloudflareinsights.com/" />

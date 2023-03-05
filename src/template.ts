@@ -5,8 +5,6 @@ Description: Template for news page
 License: MIT
 */
 
-import sanitizeHtml from "sanitize-html";
-
 export type newsData = {
   lang: string;
   title: string;
@@ -69,16 +67,6 @@ export function indexTemplate(news: []): string {
 }
 
 export function newsTemplate(data: newsData): string {
-  // Sanitize HTML
-  let sanitized = sanitizeHtml(data.content, {
-    allowedTags: sanitizeHtml.defaults.allowedTags
-      .concat(["img"])
-      .filter((item: unknown) => item !== "a" && item !== "div"),
-  });
-
-  // Remove empty tags (https://stackoverflow.com/a/5573115, CC BY-SA 4.0)
-  sanitized = sanitized.replace(/<(\w+)\b(?:\s+[\w\-.:]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[\w\-.:]+))?)*\s*\/?>\s*<\/\1\s*>/gim, "")
-
   const html = `
         <!DOCTYPE html>
         <html lang="${data.lang}">
@@ -99,7 +87,7 @@ export function newsTemplate(data: newsData): string {
           <img width="750" height="500" src="${data.imageSrc}" alt="${
     data.imageAlt
   }"/>
-          ${sanitized}
+          ${data.content}
           <a href="/"><< Return</a>
           <footer>
             📰⚡ Reader by <a href="https://fcd.im" target="_blank">Kai</a> | 

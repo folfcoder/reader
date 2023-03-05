@@ -5,13 +5,19 @@ Description: Main file
 License: MIT
 */
 
-import { errorTemplate, indexTemplate, newsData, newsTemplate } from "./template";
+import {
+  errorTemplate,
+  indexTemplate,
+  newsData,
+  newsTemplate,
+} from "./template";
 import { parseNews } from "./parser";
 import { updateNews } from "./cron";
 import { captureError } from "@cfworker/sentry";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { serveStatic } from "hono/cloudflare-workers";
+import { cache } from "hono/cache";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -19,6 +25,14 @@ const app = new Hono<{ Bindings: Env }>();
 app.use("/api/*", cors());
 
 // Static files
+app.use(
+  "/static/*",
+  cache({ cacheName: "reader", cacheControl: "max-age=2592000" })
+);
+app.use(
+  "/favicon.ico",
+  cache({ cacheName: "reader", cacheControl: "max-age=2592000" })
+);
 app.all("/static/*", serveStatic({ root: "./" }));
 app.all("/robots.txt", serveStatic({ path: "./robots.txt" }));
 app.all("/favicon.ico", serveStatic({ path: "./favicon.ico" }));
@@ -63,6 +77,7 @@ app.all("/api/news", async (c) => {
   return c.json({ success: true, news });
 });
 
+app.use("/*", cache({ cacheName: "reader", cacheControl: "max-age=86400" }));
 app.all("/*", async (c) => {
   // Security headers
   c.header("X-Frame-Options", "DENY");
@@ -83,22 +98,30 @@ app.all("/*", async (c) => {
     pathname = pathname.substring(1);
   }
 
-  // Parse news, cache it for 1 hour
+  // Parse and cache news
   let news: newsData;
-  const cache = await c.env.READER_KV.get(`cache:${pathname}`, { cacheTtl: 1800 });
+  const cache = await c.env.READER_KV.get(`cache:${pathname}`, {
+    cacheTtl: 3600,
+  });
   if (cache && c.env.WORKERS_ENV === "prod") {
     news = JSON.parse(cache);
     news.pubDate = new Date(news.pubDate);
   } else {
     news = await parseNews("https://" + pathname);
     await c.env.READER_KV.put(`cache:${pathname}`, JSON.stringify(news), {
-      expirationTtl: 3600,
+      expirationTtl: 86400,
     });
   }
 
   // Optimize image with Cloudinary whenever possible
-  news.content = news.content.replace(/<img[^>]* src=["'](.{0,255}?)["']/gi, `<img src="${c.env.CLOUDINARY_URL}$1"`)
-  news.imageSrc = news.imageSrc.length <= 255 ? c.env.CLOUDINARY_URL + news.imageSrc : news.imageSrc;
+  news.content = news.content.replace(
+    /<img[^>]* src=["'](.{0,255}?)["']/gi,
+    `<img src="${c.env.CLOUDINARY_URL}$1"`
+  );
+  news.imageSrc =
+    news.imageSrc.length <= 255
+      ? c.env.CLOUDINARY_URL + news.imageSrc
+      : news.imageSrc;
 
   return c.html(newsTemplate(news));
 });

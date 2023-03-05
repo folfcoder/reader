@@ -75,6 +75,24 @@ export function newsTemplate(data: newsData): string {
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <meta name="description" content="${data.description}">
           <meta name="robots" content="noindex">
+
+          <!-- Open Graph -->
+          <meta property="og:site_name" content="📰⚡ Reader">
+          <meta property="og:title" content="${data.title}">
+          <meta property="og:description" content="${data.description}">
+          <meta property="og:type" content="article">
+          <meta property="article:author" content="${data.author}">
+          <meta property="article:published_time" content="${data.pubDate.toISOString()}">
+          <meta property="og:image" content="${data.imageSrc}">
+
+          <!-- Twitter -->
+          <meta name="twitter:card" content="summary_large_image">
+          <meta name="twitter:site" content="@folfcoder">
+          <meta name="twitter:title" content="${data.title}">
+          <meta name="twitter:description" content="${data.description}">
+          <meta name="twitter:image" content="${data.imageSrc}">
+          <meta name="twitter:image:alt" content="${data.imageAlt}">
+
           <link rel="preload" as="image" href="${data.imageSrc}">
           <link rel="dns-prefetch" href="https://cdn.jsdelivr.net/">
           <link rel="dns-prefetch" href="https://static.cloudflareinsights.com/" />

@@ -9,7 +9,9 @@ import { newsData } from "../template";
 
 export async function parseTribun(url: string): Promise<newsData> {
     url = url.replace("m.tribunnews.com", "www.tribunnews.com");
-    const source = await fetch(url + "?page=all");
+
+    // Bypass Cloudfront 403
+    const source = await fetch(url + "?page=all", {headers: {"User-Agent": "Googlebot"}});
     const text = await source.text();
 
     const h1Regex = /<h1[^>]*>([\s\S]*?)<\/h1>/;

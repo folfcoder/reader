@@ -69,5 +69,7 @@ export async function parseKompasID(url: string): Promise<newsData> {
     pubDate: pubDate,
     author: author || "Kompas.id",
     content: content || "",
+    status: source.status,
+    error: "Failed to fetch news.",
   };
 }

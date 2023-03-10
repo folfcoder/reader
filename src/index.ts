@@ -5,12 +5,7 @@ Description: Main file
 License: MIT
 */
 
-import {
-  errorTemplate,
-  indexTemplate,
-  newsData,
-  newsTemplate,
-} from "./template";
+import { indexTemplate, newsData, newsTemplate } from "./template";
 import { parseNews } from "./parser";
 import { updateNews } from "./cron";
 import { captureError } from "@cfworker/sentry";
@@ -18,6 +13,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { serveStatic } from "hono/cloudflare-workers";
 import { cache } from "hono/cache";
+import { StatusCode } from "hono/utils/http-status";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -108,9 +104,13 @@ app.all("/*", async (c) => {
     news.pubDate = new Date(news.pubDate);
   } else {
     news = await parseNews("https://" + pathname);
-    await c.env.READER_KV.put(`cache:${pathname}`, JSON.stringify(news), {
-      expirationTtl: 86400,
-    });
+
+    // Cache 200 OK news
+    if (news.status === 200) {
+      await c.env.READER_KV.put(`cache:${pathname}`, JSON.stringify(news), {
+        expirationTtl: 86400,
+      });
+    }
   }
 
   // Optimize image with Cloudinary whenever possible
@@ -123,7 +123,7 @@ app.all("/*", async (c) => {
       ? c.env.CLOUDINARY_URL + news.imageSrc
       : news.imageSrc;
 
-  return c.html(newsTemplate(news));
+  return c.html(newsTemplate(news), news.status as StatusCode);
 });
 
 app.onError((err, c) => {
@@ -139,7 +139,22 @@ app.onError((err, c) => {
     );
   }
 
-  return c.html(errorTemplate(err.message), 500);
+  // Return 500 Internal Server Error
+  return c.html(
+    newsTemplate({
+      lang: "",
+      title: "",
+      description: "",
+      imageSrc: "",
+      imageAlt: "",
+      pubDate: new Date(),
+      author: "",
+      content: "",
+      status: 500,
+      error: err.message,
+    }),
+    500
+  );
 });
 
 export default {

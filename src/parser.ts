@@ -19,7 +19,7 @@ export async function parseNews(url: string): Promise<newsData> {
   // Parse news
   let parsedNews: newsData = {
     lang: "en",
-    title: "📰⚡ Reader: Website Not Supported!",
+    title: "📰⚡ Reader: 404 Not Found",
     description:
       "Tired of slow, ad-filled news websites? Say hello to the ad-free, lightning-fast Indonesian news reader that'll make you feel like a superhero!",
     imageSrc: "https://placekitten.com/720/480",
@@ -28,6 +28,8 @@ export async function parseNews(url: string): Promise<newsData> {
     pubDate: new Date(),
     content:
       "<p>Reader is a work in progress, which means that not all websites are supported. Check back later!</p>",
+    status: 404,
+    error: "Website not supported. Check back later!"
   };
   if (url.includes("kompas.com")) parsedNews = await parseKompas(url);
   if (url.includes("kompas.id")) parsedNews = await parseKompasID(url);

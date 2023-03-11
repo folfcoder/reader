@@ -2,11 +2,11 @@
 Tired of slow, ad-filled news websites? Say hello to 📰⚡ Reader - the Indonesian news reader that will make you feel like a superhero! With lightning-fast speeds and ad-free browsing, you can quickly catch up on the latest news without any distractions.
 
 ## 🔧 Usage
-Using 📰⚡ Reader is easy. Simply append https://reader.fcd.im/ before the URL of the news article you want to read. For example, to read an article from Kompas.com, use one of the following URLs:
+Using 📰⚡ Reader is easy. Simply append https://getreader.app/ before the URL of the news article you want to read. For example, to read an article from Kompas.com, use one of the following URLs:
 ```
-https://reader.fcd.im/https://www.kompas.com/...
-https://reader.fcd.im/http://www.kompas.com/...
-https://reader.fcd.im/www.kompas.com/...
+https://getreader.app/https://www.kompas.com/...
+https://getreader.app/http://www.kompas.com/...
+https://getreader.app/www.kompas.com/...
 ```
 
 ## 📰 Supported sites
@@ -30,7 +30,7 @@ Did you know that according to Ecograder, reading news articles without 📰⚡ 
 
 In addition, 📰⚡ Reader's host, Cloudflare, is Green Web Foundation certified, so you can rest assured that you're using a service that's committed to reducing its carbon impact:
 
-![](https://api.thegreenwebfoundation.org/greencheckimage/reader.fcd.im?nocache=true)
+![](https://api.thegreenwebfoundation.org/greencheckimage/getreader.app?nocache=true)
 
 ## 📄 License
 📰⚡ Reader is released under the [MIT](https://github.com/folfcoder/reader/blob/main/LICENSE) license. So, you can use it, modify it, and distribute it!

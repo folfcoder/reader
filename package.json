@@ -17,7 +17,7 @@
   "dependencies": {
     "@cfworker/sentry": "^1.12.4",
     "@types/sanitize-html": "^2.9.0",
-    "hono": "^3.1.7",
+    "hono": "^3.2.5",
     "sanitize-html": "^2.10.0"
   }
 }

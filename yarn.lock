@@ -1045,10 +1045,10 @@ has-flag@^4.0.0:
   resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-4.0.0.tgz#944771fd9c81c81265c4d6941860da06bb59479b"
   integrity sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==
 
-hono@^3.1.7:
-  version "3.1.7"
-  resolved "https://registry.yarnpkg.com/hono/-/hono-3.1.7.tgz#054d12df66a4f30dec3b6d97eb674f211947b7b7"
-  integrity sha512-AJto2QdBUutbJ4bVU3Vdf3IoWmtyiSoypRHfEJtTnG0WkGKhS7XVWwcwjQwbtNxoXd/iXu6mkJw0sYpVvySIAQ==
+hono@^3.2.6:
+  version "3.2.6"
+  resolved "https://registry.yarnpkg.com/hono/-/hono-3.2.6.tgz#b4927ed20b2edf165277f3e2b787a4e4948223f6"
+  integrity sha512-jUf9SgkTW/H3Pd9oPwFgf3j05RXUbILWm96WlHll56t2Jkv8tVXyfLeBzYwdTzB7JE/hx+DWMXrVJ06UdfcKng==
 
 html-rewriter-wasm@^0.4.1:
   version "0.4.1"
